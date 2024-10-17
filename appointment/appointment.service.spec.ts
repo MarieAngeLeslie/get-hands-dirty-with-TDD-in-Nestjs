@@ -70,4 +70,16 @@ describe('AppointmentService', () => {
   })
 
 
+  it('shoudl throw an error when endTime is not on same date as startTime', () => {
+    const startTime = new Date('2024-10-17T14:00:00Z');
+    const endTime = new Date('2024-10-18T14:00:00Z');
+
+    expect(() => service.scheduleAppointment({
+      patientId: 1,
+      startTime,
+      endTime
+    })).toThrow("appointment's endTime should be in the same day as start time's")
+  })
+
+
 });
