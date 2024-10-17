@@ -6,7 +6,8 @@ import { AppointmentService } from './appointment.service';
  * Les critères d'acceptance
 [x] An unconfirmed schedule should be created on success
 [x] The end time should not be before the start time
-[ ] The end time should be after the start time
+[x] The end time should be after the start time
+[ ] An appointment start and end time should be within the same day (NEW)
 [ ] The patientId should be validated?
  */
 
@@ -55,4 +56,18 @@ describe('AppointmentService', () => {
       endTime
     })).toThrow("appointment's endTime should be after startTime")
   })
+
+
+  it('should throw an error when end time is equal to start time', () => {
+    const startTime = new Date('2024-10-17T14:00:00Z');
+    const endTime = startTime;
+
+    expect(() => service.scheduleAppointment({
+      patientId: 1,
+      startTime,
+      endTime
+    })).toThrow("appointment's endTime should be after startTime")
+  })
+
+
 });
