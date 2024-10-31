@@ -7,7 +7,7 @@ import { AppointmentService } from './appointment.service';
 [x] An unconfirmed schedule should be created on success
 [x] The end time should not be before the start time
 [x] The end time should be after the start time
-[ ] An appointment start and end time should be within the same day (NEW)
+[x] An appointment start and end time should be within the same day (NEW)
 [ ] The patientId should be validated?
  */
 
@@ -69,10 +69,9 @@ describe('AppointmentService', () => {
     })).toThrow("appointment's endTime should be after startTime")
   })
 
-
-  it('shoudl throw an error when endTime is not on same date as startTime', () => {
+  it('should throw an error when endTime is not on same date as startTime', () => {
     const startTime = new Date('2024-10-17T14:00:00Z');
-    const endTime = new Date('2024-10-18T14:00:00Z');
+    const endTime = new Date('2024-11-10T14:00:00Z');
 
     expect(() => service.scheduleAppointment({
       patientId: 1,
@@ -81,5 +80,27 @@ describe('AppointmentService', () => {
     })).toThrow("appointment's endTime should be in the same day as start time's")
   })
 
+  // we do this because we check early that endTime shouldn't be come the month after
+  it('should throw an error when end time is in same day and hour of next month', () => {
+    const startTime = new Date('2024-10-31T20:00:00Z');
+    const endTime = new Date('2024-11-31T20:00:00Z');
+
+    expect(() => service.scheduleAppointment({
+      patientId: 1,
+      startTime,
+      endTime
+    })).toThrow("appointment's endTime should be in the same day as start time's")
+  })
+
+  it('should throw an error when end time is in same day and hour and month of next year', () => {
+    const startTime = new Date('2024-10-31T20:00:00Z');
+    const endTime = new Date('2025-10-31T20:00:00Z');
+
+    expect(() => service.scheduleAppointment({
+      patientId: 1,
+      startTime,
+      endTime
+    })).toThrow("appointment's endTime should be in the same day as start time's")
+  })
 
 });
